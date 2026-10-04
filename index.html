@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CHUBBY BOY VS ANNIE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<!-- main menu -->
+<div id="menu" class="overlay hidden">
+  <div class="menu-inner">
+    <h1 class="title"><span class="t-chubby">CHUBBY BOY</span><span class="t-vs">VS</span><span class="t-annie">ANNIE</span></h1>
+    <div class="subtitle">5 v 5 TOP-DOWN ARENA BRAWL</div>
+    <img class="menu-btn" id="btn_play" src="assets/ui/menu/btn_play0.png" draggable="false">
+    <div class="how-label">PLAY VS BOTS (5 V 5)</div>
+    <img class="menu-btn small" id="btn_mp" src="assets/ui/menu/btn_small0.png" draggable="false">
+    <div class="how-label">MULTIPLAYER - PLAY WITH FRIENDS</div>
+    <img class="menu-btn small" id="btn_how" src="assets/ui/menu/btn_small0.png" draggable="false">
+    <div class="how-label">HOW TO PLAY</div>
+    <div id="mp" class="overlay hidden">
+      <div class="menu-inner">
+        <h1 class="title small"><span class="t-vs">MULTIPLAYER</span></h1>
+        <div class="panel-box mp-box">
+          <label>YOUR NAME</label>
+          <input id="mp_name" maxlength="16" spellcheck="false" autocomplete="off">
+          <label>SERVER ADDRESS</label>
+          <input id="mp_addr" spellcheck="false" autocomplete="off">
+          <div id="mp_status">Enter a name, then connect.</div>
+          <img class="menu-btn small" id="btn_mp_connect" src="assets/ui/menu/btn_small0.png" draggable="false">
+          <div class="how-label">CONNECT</div>
+          <div class="mp-hint">Host starts the server: <b>node tools/multi_server.js</b><br>
+            Friends can open <b>http://&lt;host-ip&gt;:8080</b> directly in a browser.<br>
+            No bots online - only real players appear, and everyone picks their own name.</div>
+        </div>
+        <img class="menu-btn small" id="btn_mp_back" src="assets/ui/menu/btn_red0.png" draggable="false">
+        <div class="how-label">BACK</div>
+      </div>
+    </div>
+    <div id="howto" class="panel-box hidden">
+      <b>WASD</b> move &nbsp;&bull;&nbsp; <b>MOUSE</b> aim &nbsp;&bull;&nbsp; <b>LEFT CLICK</b> attack<br>
+      <b>Q / E / R</b> skills &nbsp;&bull;&nbsp; <b>F</b> ultimate (when charged) &nbsp;&bull;&nbsp; <b>SPACE</b> dash<br>
+      <b>ESC</b> pause &nbsp;&bull;&nbsp; <b>M</b> mute<br><br>
+      Chubby Boys are slow, tanky and hit like trucks.<br>
+      Annie is fast, fragile and fights at range. First team to <b>30</b> eliminations wins!
+    </div>
+    <div class="credit">Chubby Boys &trade; durability &bull; Annie &trade; pure speed</div>
+  </div>
+</div>
+
+<!-- team + character select -->
+<div id="select" class="overlay hidden">
+  <div id="team_pick" class="sel-wrap">
+    <h2 class="sel-title">CHOOSE YOUR FACTION</h2>
+    <div class="teams">
+      <div class="team-card chubby" data-team="chubby">
+        <img src="assets/ui/menu/emblem_chubby.png" draggable="false">
+        <div class="tc-name">CHUBBY BOYS</div>
+        <div class="tc-desc">Massive HP &bull; Heavy hits<br>Huge knockback &bull; Area damage<br>Slow movement</div>
+      </div>
+      <div class="team-card annie" data-team="annie">
+        <img src="assets/ui/menu/emblem_annie.png" draggable="false">
+        <div class="tc-name">ANNIE</div>
+        <div class="tc-desc">Very fast &bull; Agile dashes<br>Ranged options &bull; Fast attacks<br>Low HP</div>
+      </div>
+    </div>
+    <img class="menu-btn small" id="btn_back_team" src="assets/ui/menu/btn_red0.png" draggable="false">
+    <div class="how-label">BACK</div>
+  </div>
+  <div id="char_pick" class="sel-wrap hidden">
+    <h2 class="sel-title" id="char_title">PICK YOUR FIGHTER</h2>
+    <div id="char_grid" class="char-grid"></div>
+    <img class="menu-btn disabled" id="btn_start" src="assets/ui/menu/btn_play0.png" draggable="false">
+    <div class="how-label" id="start_label">ENTER THE ARENA</div>
+  </div>
+</div>
+
+<!-- pause -->
+<div id="pause" class="overlay hidden">
+  <div class="menu-inner">
+    <h1 class="title small"><span class="t-vs">PAUSED</span></h1>
+    <img class="menu-btn" id="btn_resume" src="assets/ui/menu/btn_play0.png" draggable="false">
+    <div class="how-label">RESUME</div>
+    <img class="menu-btn small" id="btn_restart" src="assets/ui/menu/btn_small0.png" draggable="false">
+    <div class="how-label">RESTART MATCH</div>
+    <img class="menu-btn small" id="btn_quit" src="assets/ui/menu/btn_red0.png" draggable="false">
+    <div class="how-label">QUIT TO MENU</div>
+    <img class="menu-btn small hidden" id="btn_leave" src="assets/ui/menu/btn_red0.png" draggable="false">
+    <div class="how-label hidden" id="btn_leave_label">LEAVE MULTIPLAYER MATCH</div>
+  </div>
+</div>
+
+<!-- end -->
+<div id="end" class="overlay hidden">
+  <div class="menu-inner">
+    <h1 class="title small" id="end_title">VICTORY!</h1>
+    <div class="subtitle" id="end_sub"></div>
+    <div id="end_stats" class="panel-box"></div>
+    <img class="menu-btn" id="btn_end_again" src="assets/ui/menu/btn_play0.png" draggable="false">
+    <div class="how-label">REMATCH</div>
+    <img class="menu-btn small" id="btn_end_menu" src="assets/ui/menu/btn_red0.png" draggable="false">
+    <div class="how-label">MAIN MENU</div>
+  </div>
+</div>
+
+<div id="errbox" class="hidden"></div>
+<div id="loading">LOADING ASSETS...</div>
+
+<script src="assets/manifest.js"></script>
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/map.js"></script>
+<script src="js/vfx.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/net.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/menus.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
